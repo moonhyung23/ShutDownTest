@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private DevicePolicyManager devicePolicyManager;
     Button button;
     private int DEVICE_ADMIN_ADD_RESULT_ENABLE = -1;
+    private ComponentName componentName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,18 +23,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         button = findViewById(R.id.btnTest);
         devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-
+        adminActive();
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adminActive();
+//                adminActive();
+                devicePolicyManager.reboot(componentName);
             }
         });
     }
 
     private void adminActive() {
-        ComponentName componentName = new ComponentName(this, AppDeviceAdminReceiver.class);
+        componentName = new ComponentName(this, AppDeviceAdminReceiver.class);
         Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
         intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, componentName);
         startActivityForResult(intent, DEVICE_ADMIN_ADD_RESULT_ENABLE);
